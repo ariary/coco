@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/ariary/coco/pkg/c2c"
 	encryption "github.com/ariary/go-utils/pkg/encrypt"
@@ -26,8 +27,21 @@ func main() {
 	// time.Sleep(3 * time.Second)
 	// c2c.CheckSendMessage(sc, "toto")
 	// time.Sleep(3 * time.Second)
-	resp := c2c.CheckSendMessageAndWaitResponse(sc, "youhou")
-	fmt.Println(resp)
+	// resp := c2c.CheckSendMessageAndWaitResponse(sc, "youhou")
+	// fmt.Println(resp)
+	sayHelloInstr := c2c.Instruction{Type: c2c.Run}
+	if err := c2c.SendInstruction(sc, sayHelloInstr); err != nil {
+		fmt.Println("failed sending instruciton:", err)
+	}
+	if resp, err := c2c.WaitResponse(sc); err != nil {
+		fmt.Println("Error while waiting for response:", err)
+	} else {
+		fmt.Println(resp)
+	}
+	time.Sleep(2 * time.Second)
+	//kill
+	c2c.KillModule(sc)
+
 }
 
 //goroutine wait response?

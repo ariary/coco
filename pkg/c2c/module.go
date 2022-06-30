@@ -34,7 +34,7 @@ type Params struct {
 
 type Instruction struct {
 	Type   InstructionType `json:"type"`
-	Params []Params        `json:"paremeters"`
+	Params []Params        `json:"parameters"`
 }
 
 //WaitConnection: Wait for module connexion
@@ -72,6 +72,20 @@ func SendInstruction(sc *ipc.Server, instr Instruction) (err error) {
 	}
 
 	//ACK
+	// if resp, err := WaitResponse(sc); err != nil {
+	// 	return err
+	// } else if strings.Contains(resp, INSTR_OK) {
+	// 	return errors.New("do not received instruction ACK: " + resp)
+	// }
+	return nil
+}
+
+func KillModule(sc *ipc.Server) (err error) {
+	killInstr := Instruction{Type: Kill}
+	if err := SendInstruction(sc, killInstr); err != nil {
+		return err
+	}
+	//ACK
 	if resp, err := WaitResponse(sc); err != nil {
 		return err
 	} else if strings.Contains(resp, INSTR_OK) {
@@ -79,6 +93,3 @@ func SendInstruction(sc *ipc.Server, instr Instruction) (err error) {
 	}
 	return nil
 }
-
-//  response := money{}
-// json.Unmarshal([]byte(answer), &response)

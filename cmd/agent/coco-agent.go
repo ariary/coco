@@ -16,18 +16,21 @@ func main() {
 	flag.Parse()
 
 	db := agent.ModuleDB{}
+
 	module, err := agent.GetModuleContentHTTP(url)
 	if err != nil {
 		fmt.Println("failed to retrieve module:", err)
 	}
-	socketName := agent.LaunchModule(module)
+	socketName := make(chan string)
+	go agent.LaunchModule(module, socketName)
+	socket := <-socketName
 
-	sc, err := ipc.StartServer(socketName, nil)
+	sc, err := ipc.StartServer(socket, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	fmt.Println("Start ipc server for socket:", socketName)
+	fmt.Println("Start ipc server for socket:", socket)
 
 	agent.WaitConnection(sc, &db)
 

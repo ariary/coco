@@ -1,18 +1,27 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"time"
 
-	"github.com/ariary/coco/pkg/c2c"
-	encryption "github.com/ariary/go-utils/pkg/encrypt"
+	"github.com/ariary/coco/pkg/agent"
 	ipc "github.com/james-barrow/golang-ipc"
 )
 
 func main() {
-	db := c2c.ModuleDB{}
-	socketName := c2c.SOCKET + "." + encryption.GenerateRandom()
+	var url string
+	flag.StringVar(&url, "u", "", "url testing purpose")
+	flag.Parse()
+
+	db := agent.ModuleDB{}
+	module, err := agent.GetModuleContentHTTP(url)
+	if err != nil {
+		fmt.Println("failed to retrieve module:", err)
+	}
+	socketName := agent.LaunchModule(module)
+
 	sc, err := ipc.StartServer(socketName, nil)
 	if err != nil {
 		log.Println(err)
@@ -20,28 +29,26 @@ func main() {
 	}
 	fmt.Println("Start ipc server for socket:", socketName)
 
-	c2c.WaitConnection(sc, &db)
+	agent.WaitConnection(sc, &db)
 
 	//send instruction
-	// c2c.CheckSendMessage(sc, "world")
+	// agent.CheckSendMessage(sc, "world")
 	// time.Sleep(3 * time.Second)
-	// c2c.CheckSendMessage(sc, "toto")
+	// agent.CheckSendMessage(sc, "toto")
 	// time.Sleep(3 * time.Second)
-	// resp := c2c.CheckSendMessageAndWaitResponse(sc, "youhou")
+	// resp := agent.CheckSendMessageAndWaitResponse(sc, "youhou")
 	// fmt.Println(resp)
-	sayHelloInstr := c2c.Instruction{Type: c2c.Run}
-	if err := c2c.SendInstruction(sc, sayHelloInstr); err != nil {
+	sayHelloInstr := agent.Instruction{Type: agent.Run}
+	if err := agent.SendInstruction(sc, sayHelloInstr); err != nil {
 		fmt.Println("failed sending instruciton:", err)
 	}
-	if resp, err := c2c.WaitResponse(sc); err != nil {
+	if resp, err := agent.WaitResponse(sc); err != nil {
 		fmt.Println("Error while waiting for response:", err)
 	} else {
 		fmt.Println(resp)
 	}
 	time.Sleep(2 * time.Second)
 	//kill
-	c2c.KillModule(sc)
+	agent.KillModule(sc)
 
 }
-
-//goroutine wait response?

@@ -1,10 +1,12 @@
-package c2c
+package agent
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"strings"
 
 	ipc "github.com/james-barrow/golang-ipc"
@@ -92,4 +94,21 @@ func KillModule(sc *ipc.Server) (err error) {
 		return errors.New("do not received instruction ACK: " + resp)
 	}
 	return nil
+}
+
+//GetModuleContentHTTP: retrieve Module binary content using HTTP (//from filess-xec)
+func GetModuleContentHTTP(url string) (content string, err error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	content = string(body)
+
+	return content, nil
 }

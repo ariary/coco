@@ -1,4 +1,4 @@
-package c2c
+package agent
 
 import (
 	"fmt"

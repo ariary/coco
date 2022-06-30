@@ -5,20 +5,17 @@ import (
 	"log"
 	"strings"
 
+	"github.com/ariary/coco/c2c/pkg/c2c"
 	ipc "github.com/james-barrow/golang-ipc"
 )
 
-const CONNECTION_KEYWORD = "CONNECTED"
-const LOADED_KEYWORD = "LOADED"
-const SOCKET = "YAMANAKA"
-
 func main() {
-	sc, err := ipc.StartServer(SOCKET, nil)
+	sc, err := ipc.StartServer(c2c.SOCKET, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	fmt.Println("Start ipc server for socket:", SOCKET)
+	fmt.Println("Start ipc server for socket:", c2c.SOCKET)
 
 	//wait connection
 	for {
@@ -26,11 +23,11 @@ func main() {
 		if err == nil {
 			// fmt.Printf("%+v", data)
 			msgStr := string(msg.Data)
-			if strings.HasPrefix(msgStr, CONNECTION_KEYWORD) {
+			if strings.HasPrefix(msgStr, c2c.CONNECTION_KEYWORD) {
 				module := strings.Split(msgStr, ":")[len(strings.Split(msgStr, ":"))-1] //avoid testing size and reassignement -_-
 				fmt.Println("🛰️ module", module, "loaded")
 				//confirm connection
-				CheckSendMessage(sc, LOADED_KEYWORD)
+				CheckSendMessage(sc, c2c.LOADED_KEYWORD)
 
 				//add socket to a Struct
 				break

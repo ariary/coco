@@ -21,9 +21,8 @@ func main() {
 	if err != nil {
 		fmt.Println("failed to retrieve module:", err)
 	}
-	socketName := make(chan string)
-	go agent.LaunchModule(module, socketName)
-	socket := <-socketName
+
+	socket := agent.LaunchModule(module)
 
 	sc, err := ipc.StartServer(socket, nil)
 	if err != nil {

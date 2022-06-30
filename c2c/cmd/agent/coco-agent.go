@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ariary/coco/c2c/pkg/c2c"
+	"github.com/ariary/coco/c2c"
 	ipc "github.com/james-barrow/golang-ipc"
 )
 

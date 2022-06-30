@@ -1,4 +1,4 @@
-module github.com/ariary/coco/c2c
+module github.com/ariary/coco
 
 go 1.17
 

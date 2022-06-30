@@ -2,4 +2,5 @@ package c2c
 
 const CONNECTION_KEYWORD = "CONNECTED"
 const LOADED_KEYWORD = "LOADED"
-const SOCKET = "YAMANAKA"
+const SOCKET = "COCO"
+const INSTR_OK = "INSTRUCTION OK!"

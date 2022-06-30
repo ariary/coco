@@ -8,8 +8,8 @@
 
 ## Usage
 
-* [Launch server and agent](./c2c/README.md)
-* [Write modules](./modules/README.md)
+* [Launch server and agent](./LAUNCH.md)
+* [Write modules](https://github.com/ariary/coco-modules#readme)
 
 ## Overview
 ***TL;DR***:The perk is that modules can be **custom at your convenience** (just follow a specific structure) and be **dynamically loaded** in the agent
